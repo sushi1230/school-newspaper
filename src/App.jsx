@@ -1,82 +1,99 @@
 import './App.css'
+import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import FeaturedArticle from './components/FeaturedArticle'
 import ArticleGrid from './components/ArticleGrid'
 import Footer from './components/Footer'
+import googleService from './services/googleService'
 
 function App() {
-  const featuredArticle = {
-    title: "Student Council Announces New Campus Initiatives",
-    excerpt: "A comprehensive plan to improve student life and campus facilities has been unveiled by the newly elected student council members.",
-    author: "Sarah Johnson",
-    date: "October 2, 2025",
-    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&h=500&fit=crop",
-    category: "Campus News"
-  }
+  const [articles, setArticles] = useState([])
+  const [featuredArticle, setFeaturedArticle] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const articles = [
-    {
-      id: 1,
-      title: "Robotics Team Advances to State Championship",
-      excerpt: "Our school's robotics team secured first place at the regional competition.",
-      author: "Mike Chen",
-      date: "October 1, 2025",
-      category: "Sports & Activities",
-      image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=300&fit=crop"
-    },
-    {
-      id: 2,
-      title: "Fall Musical Auditions Begin Next Week",
-      excerpt: "Drama department announces auditions for this year's production of 'The Sound of Music'.",
-      author: "Emily Rodriguez",
-      date: "September 30, 2025",
-      category: "Arts & Culture",
-      image: "https://images.unsplash.com/photo-1503095396549-807759245b35?w=400&h=300&fit=crop"
-    },
-    {
-      id: 3,
-      title: "New Lunch Menu Options Receive Mixed Reviews",
-      excerpt: "Students weigh in on the cafeteria's expanded menu featuring healthier alternatives.",
-      author: "David Kim",
-      date: "September 29, 2025",
-      category: "Student Life",
-      image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop"
-    },
-    {
-      id: 4,
-      title: "Environmental Club Launches Recycling Program",
-      excerpt: "New initiative aims to reduce campus waste and promote sustainability.",
-      author: "Lisa Park",
-      date: "September 28, 2025",
-      category: "Campus News",
-      image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&h=300&fit=crop"
-    },
-    {
-      id: 5,
-      title: "Senior Spotlight: Meet Valedictorian Candidate Emma Thompson",
-      excerpt: "A look at the academic journey and future plans of one of our top students.",
-      author: "Rachel Green",
-      date: "September 27, 2025",
-      category: "Student Profiles",
-      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400&h=300&fit=crop"
-    },
-    {
-      id: 6,
-      title: "Soccer Team Clinches League Title",
-      excerpt: "Undefeated season culminates in championship victory.",
-      author: "Tom Martinez",
-      date: "September 26, 2025",
-      category: "Sports & Activities",
-      image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=300&fit=crop"
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        // Fetch all articles from Google Sheets
+        const allArticles = await googleService.getAllArticles()
+
+        if (allArticles.length === 0) {
+          setError('No articles found. Please check your Google Sheets setup.')
+          setArticles([])
+          setFeaturedArticle(null)
+          return
+        }
+
+        // Sort articles by date (newest first)
+        const sortedArticles = allArticles.sort((a, b) =>
+          new Date(b.date) - new Date(a.date)
+        )
+
+        // Get featured article (first one marked as featured, or most recent)
+        const featured = sortedArticles.find(a => a.featured) || sortedArticles[0]
+        setFeaturedArticle(featured)
+
+        // Set remaining articles for grid (limit to 6)
+        setArticles(sortedArticles.slice(0, 6))
+      } catch (err) {
+        console.error('Error loading articles:', err)
+        setError(err.message || 'Failed to load articles from Google Sheets')
+        setArticles([])
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
+
+    fetchArticles()
+  }, [])
+
+  // Fallback UI if no articles or error
+  if (error && articles.length === 0) {
+    return (
+      <div className="App">
+        <Header />
+        <main className="main-content">
+          <div style={{
+            padding: '40px 20px',
+            textAlign: 'center',
+            backgroundColor: '#f5f5f5',
+            borderRadius: '8px',
+            margin: '40px 20px'
+          }}>
+            <h2>Getting Started</h2>
+            <p>{error}</p>
+            <p style={{ marginTop: '20px', fontSize: '14px', color: '#666' }}>
+              Check the console for details. See <code>docs/GOOGLE_API_SETUP.md</code> for setup instructions.
+            </p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
 
   return (
     <div className="App">
       <Header />
       <main className="main-content">
-        <FeaturedArticle article={featuredArticle} />
-        <ArticleGrid articles={articles} />
+        {featuredArticle && (
+          <FeaturedArticle article={featuredArticle} />
+        )}
+        {loading ? (
+          <div style={{
+            padding: '40px 20px',
+            textAlign: 'center',
+            color: '#666'
+          }}>
+            <p>Loading articles...</p>
+          </div>
+        ) : (
+          <ArticleGrid articles={articles} />
+        )}
       </main>
       <Footer />
     </div>

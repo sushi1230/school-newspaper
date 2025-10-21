@@ -1,10 +1,19 @@
 import './FeaturedArticle.css'
 
 function FeaturedArticle({ article }) {
+  // Support both 'image' (old format) and 'imageUrl' (Google Sheets format)
+  const imageUrl = article.imageUrl || article.image || 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&h=500&fit=crop'
+
+  const handleReadMore = () => {
+    if (article.contentUrl) {
+      window.open(article.contentUrl, '_blank')
+    }
+  }
+
   return (
     <section className="featured-article">
       <div className="featured-image">
-        <img src={article.image} alt={article.title} />
+        <img src={imageUrl} alt={article.title} />
         <span className="featured-badge">Featured</span>
       </div>
       <div className="featured-content">
@@ -15,7 +24,7 @@ function FeaturedArticle({ article }) {
           <span className="author">By {article.author}</span>
           <span className="date">{article.date}</span>
         </div>
-        <button className="read-more">Read Full Article</button>
+        <button className="read-more" onClick={handleReadMore}>Read Full Article</button>
       </div>
     </section>
   )
