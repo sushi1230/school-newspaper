@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import StaffPage from './pages/StaffPage'
 import WritersPage from './pages/WritersPage'
+import EditorsPage from './pages/EditorsPage'
 
 function App() {
   return (
@@ -31,7 +32,7 @@ function App() {
           <Route
             path="/editors"
             element={
-              <ProtectedRoute requiredRole="Editor" component={() => <div>Editors Page - Coming Soon</div>} />
+              <ProtectedRoute requiredRole="Editor" component={EditorsPage} />
             }
           />
 
