@@ -1,14 +1,35 @@
-# Deployment Guide
+# Deployment Guide - School Newspaper Website
 
-Deploy your School Newspaper website to the internet so it's live and accessible to everyone.
+Deploy your authentication-enabled School Newspaper website to the internet so it's live and accessible to everyone.
 
 ---
 
-## Quick Summary
+## Prerequisites Before Deploying
+
+Before you deploy, you must complete these setup steps:
+
+### 1. ✅ Google APIs Configured
+- [x] Google Sheets API setup (from GOOGLE_API_SETUP.md)
+- [x] Google OAuth 2.0 setup (from GOOGLE_OAUTH_SETUP.md)
+- [x] You have: Google API Key, Google OAuth Client ID, Google Sheets ID
+
+### 2. ✅ Code Ready
+- [x] Push all code to GitHub
+- [x] `.env.local` is in `.gitignore` (secrets won't be exposed)
+- [x] All environment variables configured locally
+
+### 3. ✅ Users Sheet Created
+- [x] Master Google Sheet with "Articles" tab
+- [x] "Users" sheet with your admin email added
+- [x] Both sheets shared publicly (view access)
+
+---
+
+## Deployment Options
 
 You have 3 main options:
 
-1. **Vercel** (Recommended) - Easiest, most beginner-friendly
+1. **Vercel** (Recommended) - Easiest, most beginner-friendly ⭐
 2. **Netlify** - Also easy, similar to Vercel
 3. **GitHub Pages** - Free, but requires more setup
 
@@ -37,26 +58,57 @@ Vercel is the easiest and most reliable option.
 ### Step 3: Configure Environment Variables
 
 1. In the "Configure Project" section, look for "Environment Variables"
-2. Add your three variables:
+2. Add **all required** variables (copy from your `.env.local`):
+
+   **Google Sheets API (Article Reading):**
    ```
-   VITE_GOOGLE_API_KEY = [your API key]
-   VITE_GOOGLE_SHEETS_ID = [your sheet ID]
-   VITE_GOOGLE_DRIVE_FOLDER_ID = [your folder ID]
+   VITE_GOOGLE_API_KEY = [your API key from GOOGLE_API_SETUP.md]
+   VITE_GOOGLE_SHEETS_ID = [your master sheet ID]
+   VITE_GOOGLE_DRIVE_FOLDER_ID = [your drive folder ID, or leave empty]
    ```
-3. (Optional) Add caching settings:
+
+   **Google OAuth 2.0 (Authentication):**
+   ```
+   VITE_GOOGLE_OAUTH_CLIENT_ID = [your OAuth Client ID from GOOGLE_OAUTH_SETUP.md]
+   VITE_ALLOWED_EMAIL_DOMAIN = pps.net
+   VITE_ADMIN_EMAIL = hkaplanminer@pps.net
+   ```
+
+   **Optional Settings:**
    ```
    VITE_CACHE_ENABLED = true
    VITE_CACHE_DURATION_MS = 3600000
    ```
 
-### Step 4: Deploy!
+   ⚠️ **Important:** Make sure you add the OAuth Client ID **or authentication won't work!**
+
+### Step 4: Update OAuth Redirect URIs
+
+**CRITICAL STEP - Do this before clicking Deploy!**
+
+Your Google OAuth app needs to know about your Vercel domain. After Vercel creates your URL, you must add it to Google Cloud Console:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com)
+2. Select your "School Newspaper" project
+3. Go to **APIs & Services** → **Credentials**
+4. Find your OAuth 2.0 Client ID
+5. Click to edit it
+6. Under "Authorized redirect URIs", add:
+   - `https://your-vercel-domain.vercel.app`
+   - `https://your-vercel-domain.vercel.app/login`
+7. Click **Save**
+
+⚠️ You'll need to do this **after** Vercel gives you your domain (in Step 5 below)
+
+### Step 5: Deploy!
 
 1. Click "Deploy"
 2. Wait 3-5 minutes for deployment
 3. You'll get a URL like: `https://school-newspaper-xyz.vercel.app`
-4. Your website is live!
+4. **Copy this URL and update your OAuth redirect URIs** (see Step 4 above)
+5. Your website is now live!
 
-### Step 5: Custom Domain (Optional)
+### Step 6: Custom Domain (Optional)
 
 To use a custom domain instead of `vercel.app`:
 
@@ -64,7 +116,7 @@ To use a custom domain instead of `vercel.app`:
 2. Add your custom domain
 3. Follow instructions to update DNS (varies by domain provider)
 
-### Automatic Updates
+### Step 7: Automatic Updates
 
 From now on, whenever you push to GitHub:
 ```bash
@@ -74,6 +126,27 @@ git push origin main
 ```
 
 Vercel automatically rebuilds and deploys your website. **No manual steps needed!**
+
+---
+
+## Post-Deployment Checklist
+
+After deployment, verify everything works:
+
+- [ ] Website loads at your Vercel URL
+- [ ] Click "Sign in with Google" button
+- [ ] Login redirects to Google sign-in page
+- [ ] You can sign in with your @pps.net email
+- [ ] After login, you're redirected to your dashboard (Admin → /admin)
+- [ ] Home page displays (with or without articles)
+- [ ] Staff page loads
+- [ ] All buttons and navigation work
+
+**If login doesn't work:**
+1. Check OAuth Client ID is in Vercel environment variables
+2. Check your Vercel domain is added to OAuth redirect URIs
+3. Check browser console (F12) for error messages
+4. Try clearing browser cache and signing in again
 
 ---
 
