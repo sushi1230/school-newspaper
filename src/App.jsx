@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import StaffPage from './pages/StaffPage'
+import WritersPage from './pages/WritersPage'
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
           <Route
             path="/writers"
             element={
-              <ProtectedRoute requiredRole="Writer" component={() => <div>Writers Page - Coming Soon</div>} />
+              <ProtectedRoute requiredRole="Writer" component={WritersPage} />
             }
           />
 
