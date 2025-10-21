@@ -1,0 +1,287 @@
+.login-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--primary-color) 0%, #333 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Georgia', serif;
+}
+
+.login-container {
+  max-width: 1000px;
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.login-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  color: white;
+  padding: 40px 30px;
+  text-align: center;
+  grid-column: 1 / 2;
+}
+
+.login-header h1 {
+  font-size: 2.5em;
+  margin: 0 0 10px 0;
+  font-weight: bold;
+}
+
+.login-header .tagline {
+  font-size: 1.1em;
+  margin: 0;
+  opacity: 0.95;
+}
+
+.login-content {
+  grid-column: 2 / 3;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.login-section {
+  margin-bottom: 30px;
+}
+
+.login-section h2 {
+  font-size: 1.8em;
+  color: var(--primary-color);
+  margin: 0 0 10px 0;
+}
+
+.login-description {
+  font-size: 0.95em;
+  color: #666;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.signin-button-container {
+  margin: 25px 0;
+  display: flex;
+  justify-content: center;
+}
+
+#google_signin_button {
+  display: inline-block;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c41e3a;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-top: 15px;
+  border-left: 4px solid var(--accent-color);
+}
+
+.error-message p {
+  margin: 0;
+  font-size: 0.9em;
+}
+
+.loading-message {
+  text-align: center;
+  color: var(--accent-color);
+  padding: 15px 0;
+  font-size: 0.95em;
+}
+
+.info-section {
+  margin-top: 40px;
+}
+
+.info-section h3 {
+  font-size: 1.3em;
+  color: var(--primary-color);
+  margin: 0 0 15px 0;
+}
+
+.dashboard-info {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.info-card {
+  padding: 12px;
+  background: #f9f9f9;
+  border-left: 3px solid var(--accent-color);
+  border-radius: 4px;
+}
+
+.info-card h4 {
+  margin: 0 0 5px 0;
+  font-size: 0.9em;
+  color: var(--primary-color);
+}
+
+.info-card p {
+  margin: 0;
+  font-size: 0.85em;
+  color: #666;
+  line-height: 1.4;
+}
+
+.info-card .access-note {
+  margin-top: 5px;
+  color: var(--accent-color);
+  font-weight: bold;
+  font-size: 0.8em;
+}
+
+.help-section {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.help-section h3 {
+  font-size: 1.1em;
+  color: var(--primary-color);
+  margin: 0 0 10px 0;
+}
+
+.help-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.help-section li {
+  font-size: 0.85em;
+  color: #666;
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.4;
+}
+
+.help-section li:before {
+  content: '▸';
+  position: absolute;
+  left: 5px;
+  color: var(--accent-color);
+  font-weight: bold;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .login-container {
+    grid-template-columns: 1fr;
+  }
+
+  .login-header {
+    grid-column: 1 / 2;
+    padding: 30px 20px;
+  }
+
+  .login-header h1 {
+    font-size: 2em;
+  }
+
+  .login-content {
+    grid-column: 1 / 2;
+    padding: 30px 20px;
+    max-height: none;
+  }
+
+  .dashboard-info {
+    grid-template-columns: 1fr;
+  }
+
+  .info-card {
+    padding: 10px;
+  }
+
+  .info-card h4 {
+    font-size: 0.85em;
+  }
+
+  .info-card p {
+    font-size: 0.8em;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-page {
+    padding: 10px;
+  }
+
+  .login-container {
+    border-radius: 4px;
+  }
+
+  .login-header {
+    padding: 20px 15px;
+  }
+
+  .login-header h1 {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+  }
+
+  .login-header .tagline {
+    font-size: 0.9em;
+  }
+
+  .login-content {
+    padding: 20px 15px;
+  }
+
+  .login-section h2 {
+    font-size: 1.3em;
+  }
+
+  .login-description {
+    font-size: 0.85em;
+  }
+
+  .info-section {
+    margin-top: 20px;
+  }
+
+  .info-section h3,
+  .help-section h3 {
+    font-size: 1em;
+  }
+
+  .dashboard-info {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .info-card {
+    padding: 8px;
+  }
+
+  .info-card h4 {
+    font-size: 0.8em;
+    margin-bottom: 3px;
+  }
+
+  .info-card p {
+    font-size: 0.75em;
+  }
+
+  .help-section {
+    margin-top: 15px;
+    padding-top: 15px;
+  }
+
+  .help-section li {
+    font-size: 0.8em;
+    margin-bottom: 6px;
+  }
+}
